@@ -782,6 +782,7 @@ class Stringable implements JsonSerializable
      *
      * @return string
      */
+    #[ReturnTypeWillChnage]
     public function jsonSerialize()
     {
         return $this->__toString();
