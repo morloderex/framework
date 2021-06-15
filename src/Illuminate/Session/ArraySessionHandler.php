@@ -38,8 +38,7 @@ class ArraySessionHandler implements SessionHandlerInterface
      *
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
-    public function open($savePath, $sessionName)
+    public function open(string $path, string $name): bool
     {
         return true;
     }
@@ -47,8 +46,7 @@ class ArraySessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -56,14 +54,13 @@ class ArraySessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
-    public function read($sessionId)
+    public function read(string $id): string|false
     {
-        if (! isset($this->storage[$sessionId])) {
+        if (! isset($this->storage[$id])) {
             return '';
         }
 
-        $session = $this->storage[$sessionId];
+        $session = $this->storage[$id];
 
         $expiration = $this->calculateExpiration($this->minutes * 60);
 
@@ -77,8 +74,7 @@ class ArraySessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
-    public function write($sessionId, $data)
+    public function write(string $id, string $data): bool
     {
         $this->storage[$sessionId] = [
             'data' => $data,
@@ -91,11 +87,10 @@ class ArraySessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
-    public function destroy($sessionId)
+    public function destroy(string $id): bool
     {
-        if (isset($this->storage[$sessionId])) {
-            unset($this->storage[$sessionId]);
+        if (isset($this->storage[$id])) {
+            unset($this->storage[$id]);
         }
 
         return true;
@@ -104,10 +99,9 @@ class ArraySessionHandler implements SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    #[ReturnTypeWillChange]
-    public function gc($lifetime)
+    public function gc(int $max_lifetime): int|false
     {
-        $expiration = $this->calculateExpiration($lifetime);
+        $expiration = $this->calculateExpiration($max_lifetime);
 
         foreach ($this->storage as $sessionId => $session) {
             if ($session['time'] < $expiration) {
