@@ -76,7 +76,7 @@ class ArraySessionHandler implements SessionHandlerInterface
      */
     public function write(string $id, string $data): bool
     {
-        $this->storage[$sessionId] = [
+        $this->storage[$id] = [
             'data' => $data,
             'time' => $this->currentTime(),
         ];
